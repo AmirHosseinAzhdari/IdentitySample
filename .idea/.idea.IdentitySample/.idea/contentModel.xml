@@ -37,9 +37,18 @@
             </e>
           </e>
         </e>
+        <e p="PersianTranslation" t="Include">
+          <e p="Identity" t="Include">
+            <e p="PersianIdentityErrorDescriber.cs" t="Include" />
+          </e>
+        </e>
         <e p="Program.cs" t="Include" />
         <e p="Properties" t="Include">
           <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Repositories" t="Include">
+          <e p="IMessageSender.cs" t="Include" />
+          <e p="MessageSender.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
         <e p="ViewModel" t="Include">
@@ -57,7 +66,6 @@
           </e>
           <e p="Home" t="Include">
             <e p="Index.cshtml" t="Include" />
-            <e p="Privacy.cshtml" t="Include" />
           </e>
           <e p="Shared" t="Include">
             <e p="_Layout.cshtml" t="Include" />
