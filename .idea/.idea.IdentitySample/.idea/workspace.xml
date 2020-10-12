@@ -14,21 +14,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e019d032-9889-4a8e-abad-7a7c0fbc728e" name="Default Changelist" comment="Add Login and LogOut">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.IdentitySample/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.IdentitySample/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.IdentitySample/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.IdentitySample/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/IdentitySample/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/IdentitySample/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/IdentitySample/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/IdentitySample/v16/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample.sln" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IdentitySample/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/ViewModel/Account/LoginViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/ViewModel/Account/LoginViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IdentitySample/ViewModel/Account/RegisterViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/ViewModel/Account/RegisterViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Views/Account/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Views/Account/Login.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Views/Account/Register.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Views/Account/Register.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Views/Home/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Views/Home/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Views/Home/Privacy.cshtml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IdentitySample/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/IdentitySample/Views/Shared/_Layout.cshtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +37,6 @@
         <option value="$PROJECT_DIR$/IdentitySample/Models/Entity/Employee.cs" />
         <option value="$PROJECT_DIR$/IdentitySample/appsettings.json" />
         <option value="$PROJECT_DIR$/IdentitySample/Models/Context/ApplicationDbContext.cs" />
-        <option value="$PROJECT_DIR$/IdentitySample/ViewModel/Account/RegisterViewModel.cs" />
         <option value="$PROJECT_DIR$/IdentitySample/Views/Account/Login.cshtml" />
         <option value="$PROJECT_DIR$/IdentitySample/Views/Account/Register.cshtml" />
         <option value="$PROJECT_DIR$/IdentitySample/Controllers/HomeController.cs" />
@@ -59,6 +48,7 @@
         <option value="$PROJECT_DIR$/IdentitySample/Repositories/IMessageSender.cs" />
         <option value="$PROJECT_DIR$/IdentitySample/Repositories/MessageSender.cs" />
         <option value="$PROJECT_DIR$/IdentitySample/Startup.cs" />
+        <option value="$PROJECT_DIR$/IdentitySample/ViewModel/Account/RegisterViewModel.cs" />
         <option value="$PROJECT_DIR$/IdentitySample/Controllers/AccountController.cs" />
       </list>
     </option>
@@ -129,7 +119,8 @@
       <updated>1602194350042</updated>
       <workItem from="1602194433394" duration="4848000" />
       <workItem from="1602346748709" duration="5610000" />
-      <workItem from="1602436502282" duration="6643000" />
+      <workItem from="1602436502282" duration="7276000" />
+      <workItem from="1602497482243" duration="2225000" />
     </task>
     <task id="LOCAL‎۰۰۰۰۱" summary="Add Login and LogOut">
       <created>1602365871617</created>
@@ -143,7 +134,13 @@
       <option name="presentableId" value="LOCAL‎۰۰۰۰۲" />
       <updated>1602365893264</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL‎۰۰۰۰۳" summary="Change Identity Language for Persian and Send Confirmation Email with Identity">
+      <created>1602443750887</created>
+      <option name="number" value="LOCAL‎۰۰۰۰۳" />
+      <option name="presentableId" value="LOCAL‎۰۰۰۰۳" />
+      <updated>1602443750887</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,32 +163,33 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Add Login and LogOut" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Login and LogOut" />
+    <MESSAGE value="Change Identity Language for Persian and Send Confirmation Email with Identity" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change Identity Language for Persian and Send Confirmation Email with Identity" />
   </component>
   <component name="WindowStateProjectService">
     <state x="134" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602347174641">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
     <state x="134" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602347174641" />
-    <state width="1317" height="179" key="GridCell.Tab.0.bottom" timestamp="1602443077230">
+    <state width="1317" height="179" key="GridCell.Tab.0.bottom" timestamp="1602498344823">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="179" key="GridCell.Tab.0.bottom/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602443077230" />
+    <state width="1317" height="179" key="GridCell.Tab.0.bottom/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602498344823" />
     <state width="1317" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602366339958" />
-    <state width="1317" height="179" key="GridCell.Tab.0.center" timestamp="1602443077229">
+    <state width="1317" height="179" key="GridCell.Tab.0.center" timestamp="1602498344823">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="179" key="GridCell.Tab.0.center/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602443077229" />
+    <state width="1317" height="179" key="GridCell.Tab.0.center/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602498344823" />
     <state width="1317" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1602366339958" />
-    <state width="1317" height="179" key="GridCell.Tab.0.left" timestamp="1602443077229">
+    <state width="1317" height="179" key="GridCell.Tab.0.left" timestamp="1602498344822">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="179" key="GridCell.Tab.0.left/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602443077229" />
+    <state width="1317" height="179" key="GridCell.Tab.0.left/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602498344822" />
     <state width="1317" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1602366339958" />
-    <state width="1317" height="179" key="GridCell.Tab.0.right" timestamp="1602443077229">
+    <state width="1317" height="179" key="GridCell.Tab.0.right" timestamp="1602498344823">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="179" key="GridCell.Tab.0.right/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602443077229" />
+    <state width="1317" height="179" key="GridCell.Tab.0.right/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602498344823" />
     <state width="1317" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1602366339958" />
     <state width="1317" height="250" key="GridCell.Tab.1.bottom" timestamp="1602366339943">
       <screen x="0" y="0" width="1366" height="728" />
@@ -277,9 +275,10 @@
       <screen x="0" y="0" width="1360" height="728" />
     </state>
     <state x="272" y="96" key="Rider.ProjectTemplateDialog.Size/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602438730594" />
-    <state x="275" y="97" key="Vcs.Push.Dialog.v2" timestamp="1602365922647">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="274" y="97" key="Vcs.Push.Dialog.v2" timestamp="1602443852261">
+      <screen x="0" y="0" width="1360" height="728" />
     </state>
+    <state x="274" y="97" key="Vcs.Push.Dialog.v2/0.0.1360.728/1360.-1.1366.768@0.0.1360.728" timestamp="1602443852261" />
     <state x="275" y="97" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1602365922647" />
   </component>
 </project>

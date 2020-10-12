@@ -32,9 +32,19 @@ namespace IdentitySample
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 
+            //Connection String
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
+            //Authentication
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["GoogleAuthentication:ClientId"];
+                    options.ClientSecret = Configuration["GoogleAuthentication:ClientSecret"];
+                });
+
+            //Identity
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     options.Password.RequiredUniqueChars = 0;

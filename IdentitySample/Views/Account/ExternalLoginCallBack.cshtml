@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "خطا!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-danger">مشکلی بوجودآمده است!!!</h1>
+
+<div class="container">
+    <div class="align-items-center text-center">
+        <h3 class="text-warning">@ViewBag.ErrorTitle</h3>
+        <h3 class="text-warning">@ViewBag.ErrorMessage</h3>
+    </div>
+</div>

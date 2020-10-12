@@ -8,19 +8,23 @@ namespace IdentitySample.Models.Entity
         public int Id { get; set; }
         
         [StringLength(64)]
-        [Required(ErrorMessage = "Please Inter Name")]
+        [Required(ErrorMessage = "لطفا نام را وارد کنید")]
+        [Display(Name ="نام")]
         public string Name { get; set; }
         
         [StringLength(64)]
-        [Required(ErrorMessage = "Please Inter LastName")]
+        [Required(ErrorMessage = "لطفا نام خانوادگی را وارد کنید")]
+        [Display(Name = "نام خانوادگی")]
         public string LastName { get; set; }
         
         [StringLength(64)]
-        [Required(ErrorMessage = "Please Inter City")]
+        [Required(ErrorMessage = "لطفا شهر را وارد کنید")]
+        [Display(Name = "شهر")]
         public string City { get; set; }
         
         [StringLength(32)]
-        [Required(ErrorMessage = "Please Inter Gender")]
+        [Display(Name = "نقش")]
+        [Required(ErrorMessage = "لطفا نقش را وارد کنید")]
         public string Gender { get; set; }
     }
 }
