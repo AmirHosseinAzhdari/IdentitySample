@@ -1,0 +1,17 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+@{
+    ViewData["Title"] = "افزودن نقش";
+}
+
+<h1>افزودن نقش</h1>
+
+<form asp-controller="ManageRole" asp-action="AddRole" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <label class="control-label">نام :</label>
+        <input class="form-control" asp-for="Name" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">ثبت</button>
+</form>

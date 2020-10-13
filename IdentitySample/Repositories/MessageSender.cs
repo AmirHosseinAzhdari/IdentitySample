@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace IdentitySample.Repositories
 {
-    public class MessageSender:IMessageSender
+    public class MessageSender : IMessageSender
     {
         public Task SendEmailAsync(string toEmail, string subject, string message, bool messageHtml = false)
         {

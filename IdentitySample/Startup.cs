@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using IdentitySample.Models.Context;
 using IdentitySample.PersianTranslation.Identity;
 using IdentitySample.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using System;
 
 namespace IdentitySample
 {
@@ -56,6 +51,13 @@ namespace IdentitySample
                 .AddDefaultTokenProviders()
                 .AddErrorDescriber<PersianIdentityErrorDescriber>();
 
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("EmployeeListPolicy", policy =>
+                        policy.RequireClaim(ClaimTypesStore.EmployeeList, true.ToString()));
+                });
+
+            //Scoped
             services.AddScoped<IMessageSender, MessageSender>();
         }
 

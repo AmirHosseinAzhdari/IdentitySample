@@ -9,10 +9,10 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
             @Html.AntiForgeryToken()
-           
+
             @if (ViewData["ErrorMessage"] != null)
             {
                 <div class="text-danger">@ViewData["ErrorMessage"]</div>
@@ -21,24 +21,24 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control"/>
+                <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control"/>
+                <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RememberMe"/> @Html.DisplayNameFor(model => model.RememberMe)
+                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
-        
+
         <div class="row mb-3">
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <h5 class="font-medium m-b-20" style="font-size: 16px">یا ورود با استفاده از اکانت :</h5>
@@ -67,7 +67,6 @@
                 }
             </div>
         </div>
-
     </div>
 </div>
 

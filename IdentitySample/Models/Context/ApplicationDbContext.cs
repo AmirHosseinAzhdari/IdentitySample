@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentitySample.Models.Context
 {
-    public class ApplicationDbContext:IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions dbContextOptions)
-        :base(dbContextOptions)
+        : base(dbContextOptions)
         {
         }
 

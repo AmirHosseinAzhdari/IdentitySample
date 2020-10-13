@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using IdentitySample.Models.Context;
+﻿using IdentitySample.Models.Context;
 using IdentitySample.Models.Entity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentitySample.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Owner")]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -144,7 +141,7 @@ namespace IdentitySample.Controllers
             var employee = await _context.Employees.FindAsync(id);
             _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index)); 
+            return RedirectToAction(nameof(Index));
         }
 
         private bool EmployeeExists(int id)

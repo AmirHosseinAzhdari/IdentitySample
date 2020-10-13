@@ -20,32 +20,41 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                       @if (SignInManager.IsSignedIn(User))
-                       {
-                           <li class="nav-item ml-auto">
-                               <form asp-action="LogOut" asp-controller="Account" method="post">
-                                   @Html.AntiForgeryToken()
-                                   <button class="btn nav-link" type="submit">خروج</button>
-                               </form>
-                           </li>
-                       }
-                       else
-                       {
-                           <li class="nav-item ml-auto">
-                               <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">ثبت نام</a>
-                           </li>
-                           <li class="nav-item">
-                               <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">ورود</a>
-                           </li> 
-                       }
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item ml-auto">
+                                <form asp-action="LogOut" asp-controller="Account" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn nav-link" type="submit">خروج</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ml-auto">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">ثبت نام</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">ورود</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">خانه</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">مدیریت کارمندان</a>
-                        </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Owner"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index"> کارمندان</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ManageUser" asp-action="Index"> کاربران</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Owner"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ManageRole" asp-action="Index"> نقش ها</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

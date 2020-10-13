@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using IdentitySample.Repositories;
+using IdentitySample.ViewModel.Account;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentitySample.Repositories;
-using IdentitySample.ViewModel.Account;
-using Microsoft.AspNetCore.Identity;
 
 namespace IdentitySample.Controllers
 {
@@ -15,6 +13,7 @@ namespace IdentitySample.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IMessageSender _messageSender;
+
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IMessageSender messageSender)
         {
             _userManager = userManager;
@@ -123,7 +122,6 @@ namespace IdentitySample.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-
 
                 if (result.IsLockedOut)
                 {
