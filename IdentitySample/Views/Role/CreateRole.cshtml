@@ -1,0 +1,33 @@
+﻿@model IdentitySample.ViewModel.Role.CreateRoleViewModel
+
+@{
+    ViewData["Title"] = "CreateRole";
+}
+
+<h1>CreateRole</h1>
+<form asp-controller="Role" asp-action="CreateRole" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly"></div>
+    <br />
+    <label>New Role Name :</label>
+    <input asp-for="RoleName" />
+    <br />
+    <span class="text-danger" asp-validation-for="RoleName"></span>
+    <hr />
+    @for (int i = 0; i < Model.ActionAndControllerNames.Count; i++)
+    {
+        <div class="form-group">
+            <input asp-for="ActionAndControllerNames[i].IsSelected" />
+            <input type="hidden" readonly="readonly" asp-for="ActionAndControllerNames[i].ActionName" />
+            <input type="hidden" readonly="readonly" asp-for="ActionAndControllerNames[i].ControllerName" />
+            <input type="hidden" readonly="readonly" asp-for="ActionAndControllerNames[i].AreaName" />
+            <label for="ActionAndControllerNames_@(i)__IsSelected">
+                @(Model.ActionAndControllerNames[i].AreaName ?? "NoArea") -
+                @Model.ActionAndControllerNames[i].ControllerName -
+                @Model.ActionAndControllerNames[i].ActionName
+            </label>
+        </div>
+    }
+
+    <button class="btn btn-success" type="submit">Submit</button>
+</form>

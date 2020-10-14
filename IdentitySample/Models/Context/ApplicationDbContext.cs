@@ -12,6 +12,7 @@ namespace IdentitySample.Models.Context
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<SiteSetting> SiteSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

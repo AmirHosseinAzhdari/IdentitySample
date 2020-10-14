@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using IdentitySample.Security.Default;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentitySample
 {
@@ -54,11 +56,28 @@ namespace IdentitySample
             services.AddAuthorization(options =>
                 {
                     options.AddPolicy("EmployeeListPolicy", policy =>
-                        policy.RequireClaim(ClaimTypesStore.EmployeeList, true.ToString()));
+                        policy.RequireClaim(ClaimTypesStore.EmployeeList, true.ToString()
+                        ));
+
+                    options.AddPolicy("ClaimOrRole", policy =>
+                         policy.RequireAssertion(context =>
+                             context.User.HasClaim(ClaimTypesStore.EmployeeList, true.ToString()) ||
+                             context.User.IsInRole("Admin")
+                             ));
+
+                    options.AddPolicy("ClaimRequirement", policy =>
+                        policy.Requirements.Add(new ClaimRequirement(ClaimTypesStore.EmployeeList,
+                            true.ToString())));
                 });
 
+            services.AddMemoryCache();
+
+            //Transient
+            services.AddTransient<IUtilities, Utilities>();
             //Scoped
             services.AddScoped<IMessageSender, MessageSender>();
+            //Singleton
+            services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
