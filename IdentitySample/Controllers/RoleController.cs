@@ -75,7 +75,7 @@ namespace IdentitySample.Controllers
                     {
                         var areaName = (string.IsNullOrEmpty(requestRole.AreaName)) ? "NoArea" : requestRole.AreaName;
                         await _roleManager.AddClaimAsync(role,
-                            new Claim($"{areaName}|{requestRole.ControllerName}|{requestRole.ActionName}",
+                            new Claim($"{areaName}|{requestRole.ControllerName}|{requestRole.ActionName}".ToUpper(),
                                 true.ToString()));
                     }
 

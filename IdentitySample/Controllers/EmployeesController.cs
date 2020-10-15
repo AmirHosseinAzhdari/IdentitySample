@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IdentitySample.Controllers
 {
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Policy = "DynamicRole")]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;

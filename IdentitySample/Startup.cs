@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using IdentitySample.Security.Default;
+using IdentitySample.Security.DynamicRole;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 
 namespace IdentitySample
@@ -53,6 +55,19 @@ namespace IdentitySample
                 .AddDefaultTokenProviders()
                 .AddErrorDescriber<PersianIdentityErrorDescriber>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.Cookie.Name = "IdentityProj";
+                options.LoginPath = "/Account/Login";
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+            });
+
+            services.Configure<SecurityStampValidatorOptions>(option =>
+            {
+                option.ValidationInterval = TimeSpan.FromSeconds(10);
+            });
+
             services.AddAuthorization(options =>
                 {
                     options.AddPolicy("EmployeeListPolicy", policy =>
@@ -68,14 +83,18 @@ namespace IdentitySample
                     options.AddPolicy("ClaimRequirement", policy =>
                         policy.Requirements.Add(new ClaimRequirement(ClaimTypesStore.EmployeeList,
                             true.ToString())));
+
+                    options.AddPolicy("DynamicRole", policy =>
+                        policy.Requirements.Add(new DynamicRoleRequirement()));
                 });
 
             services.AddMemoryCache();
-
+            services.AddHttpContextAccessor();
             //Transient
             services.AddTransient<IUtilities, Utilities>();
             //Scoped
             services.AddScoped<IMessageSender, MessageSender>();
+            services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
             //Singleton
             services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
         }

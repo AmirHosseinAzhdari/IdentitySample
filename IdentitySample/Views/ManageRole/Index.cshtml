@@ -3,7 +3,7 @@
     ViewData["Title"] = "لیست نقش ها";
 }
 
-<a asp-controller="ManageRole" asp-action="AddRole" class="btn btn-success">اضافه کردن نقش جدید</a>
+@*<a asp-controller="ManageRole" asp-action="AddRole" class="btn btn-success">اضافه کردن نقش جدید</a>*@
 @Html.AntiForgeryToken()
 @if (!Model.Any())
 {
