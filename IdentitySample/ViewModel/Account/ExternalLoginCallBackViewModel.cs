@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentitySample.ViewModel.Account
 {
-    public class RegisterViewModel
+    public class ExternalLoginCallBackViewModel
     {
         [Display(Name = "نام کاربری")]
         [Required(ErrorMessage = "نام کاربری را وارد کنید")]
@@ -11,20 +11,12 @@ namespace IdentitySample.ViewModel.Account
             AdditionalFields = "__RequestVerificationToken")]
         public string UserName { get; set; }
 
-        [Display(Name = "ایمیل")]
-        [Required(ErrorMessage = "ایمیل را وارد کنید")]
-        [DataType(DataType.EmailAddress)]
-        [Remote("IsEmailInUse", "Account", HttpMethod = "POST",
-            AdditionalFields = "__RequestVerificationToken")]
-        public string Email { get; set; }
-
         [Display(Name = "رمز عبور")]
-        [Required(ErrorMessage = "رمز عبور را وارد کنید")]
         [DataType(DataType.Password)]
+        [MinLength(6, ErrorMessage = "رمز عبور حداقل باید {1} کاراکتر باشد")]
         public string Password { get; set; }
 
         [Display(Name = "تکرار رمز عبور")]
-        [Required(ErrorMessage = "تکرار رمز عبور را وارد کنید")]
         [Compare(nameof(Password), ErrorMessage = "رمز عبور و تکرار آن مطابقت ندارد")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }

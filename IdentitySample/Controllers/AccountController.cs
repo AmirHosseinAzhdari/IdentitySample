@@ -173,8 +173,10 @@ namespace IdentitySample.Controllers
             return new ChallengeResult(provider, properties);
         }
 
+        [HttpGet]
         public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
         {
+            ViewData["returnUrl"] = returnUrl;
             returnUrl =
                 (returnUrl != null && Url.IsLocalUrl(returnUrl)) ? returnUrl : Url.Content("~/");
 
@@ -210,18 +212,9 @@ namespace IdentitySample.Controllers
             if (email != null)
             {
                 var user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
-                {
-                    var userName = email.Split('@')[0];
-                    user = new IdentityUser()
-                    {
-                        UserName = (userName.Length <= 10 ? userName : userName.Substring(0, 10)),
-                        Email = email,
-                        EmailConfirmed = true
-                    };
 
-                    await _userManager.CreateAsync(user);
-                }
+                if (user == null)
+                    return View();
 
                 await _userManager.AddLoginAsync(user, externalLoginInfo);
                 await _signInManager.SignInAsync(user, false);
@@ -229,9 +222,154 @@ namespace IdentitySample.Controllers
                 return Redirect(returnUrl);
             }
 
-            ViewBag.ErrorTitle = "لطفا با بخش پشتیبانی تماس بگیرید";
-            ViewBag.ErrorMessage = $"دریافت کرد {externalLoginInfo.LoginProvider} نمیتوان اطلاعاتی از";
+            ViewData["ErrorMessage"] = $"دریافت کرد {externalLoginInfo.LoginProvider} نمیتوان اطلاعاتی از";
+            return View("Login", loginViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExternalLoginCallBack(ExternalLoginCallBackViewModel model,
+            string returnUrl = null)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginViewModel = new LoginViewModel()
+                {
+                    ReturnUrl = returnUrl,
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                };
+
+                var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
+                if (externalLoginInfo?.Principal.FindFirstValue(ClaimTypes.Email) == null)
+                {
+                    ModelState.AddModelError("ErrorLoadingExternalLoginInfo", "مشکلی پیش آمد");
+                    return View("Login", loginViewModel);
+                }
+
+                var email = externalLoginInfo?.Principal.FindFirstValue(ClaimTypes.Email);
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
+                {
+                    var result = new IdentityResult();
+                    user = new IdentityUser()
+                    {
+                        Email = email,
+                        UserName = model.UserName,
+                        EmailConfirmed = true
+                    };
+
+                    if (!string.IsNullOrEmpty(model.Password))
+                        await _userManager.CreateAsync(user, model.Password);
+                    else
+                        await _userManager.CreateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        await _userManager.AddLoginAsync(user, externalLoginInfo);
+                        await _signInManager.SignInAsync(user, false);
+
+                        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                            return Redirect(returnUrl);
+
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "مشکلی پیش آمد");
+                    return View("Login", loginViewModel);
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginViewModel = new LoginViewModel()
+                {
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                };
+
+                ViewData["ErrorMessage"] =
+                    "اگر ایمیل وارد شده معتبر باشد لینک فراموشی رمز عبور به ایمیل شما ارسال میشود.";
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                    return View("Login", loginViewModel);
+
+                var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetPasswordUrl = Url.Action("ResetPassword", "Account",
+                    new { email = user.Email, token = resetPasswordToken }, Request.Scheme);
+
+                await _messageSender.SendEmailAsync(user.Email, "Reset Password Link",
+                    $"لطفا برای تغییر رمز خود وارد این '{resetPasswordUrl}' شوید");
+
+                return View("Login", loginViewModel);
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            if (string.IsNullOrWhiteSpace(email) || (string.IsNullOrWhiteSpace(token)))
+                return RedirectToAction("Index", "Home");
+
+            var model = new ResetPasswordViewModel()
+            {
+                Email = email,
+                Token = token
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginViewModel = new LoginViewModel
+                {
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                };
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                    return RedirectToAction("Login", loginViewModel);
+
+                var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    ViewData["ErrorMessage"] = "پسورد شما با موفقیت تغییر یافت. لطفا مجددا وارد سایت شوید";
+                    return View("Login", loginViewModel);
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(model);
         }
     }
 }
