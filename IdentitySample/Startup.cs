@@ -13,6 +13,8 @@ using IdentitySample.Security.Default;
 using IdentitySample.Security.DynamicRole;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using IdentitySample.Security.PhoneTotp.Providers;
+using IdentitySample.Security.PhoneTotp;
 
 namespace IdentitySample
 {
@@ -35,6 +37,7 @@ namespace IdentitySample
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
+            #region Authentication
             //Authentication
             services.AddAuthentication()
                 .AddGoogle(options =>
@@ -42,8 +45,9 @@ namespace IdentitySample
                     options.ClientId = Configuration["GoogleAuthentication:ClientId"];
                     options.ClientSecret = Configuration["GoogleAuthentication:ClientSecret"];
                 });
+            #endregion
 
-            //Identity
+            #region Identity
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     options.Password.RequiredUniqueChars = 0;
@@ -54,6 +58,7 @@ namespace IdentitySample
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddErrorDescriber<PersianIdentityErrorDescriber>();
+            #endregion
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -66,32 +71,40 @@ namespace IdentitySample
             services.Configure<SecurityStampValidatorOptions>(option =>
             {
                 option.ValidationInterval = TimeSpan.FromSeconds(10);
-            });
+            });        
 
+            #region Authorization
             services.AddAuthorization(options =>
-                {
-                    options.AddPolicy("EmployeeListPolicy", policy =>
-                        policy.RequireClaim(ClaimTypesStore.EmployeeList, true.ToString()
-                        ));
+            {
+                options.AddPolicy("EmployeeListPolicy", policy =>
+                    policy.RequireClaim(ClaimTypesStore.EmployeeList, true.ToString()
+                    ));
 
-                    options.AddPolicy("ClaimOrRole", policy =>
-                         policy.RequireAssertion(context =>
-                             context.User.HasClaim(ClaimTypesStore.EmployeeList, true.ToString()) ||
-                             context.User.IsInRole("Admin")
-                             ));
+                options.AddPolicy("ClaimOrRole", policy =>
+                     policy.RequireAssertion(context =>
+                         context.User.HasClaim(ClaimTypesStore.EmployeeList, true.ToString()) ||
+                         context.User.IsInRole("Admin")
+                         ));
 
-                    options.AddPolicy("ClaimRequirement", policy =>
-                        policy.Requirements.Add(new ClaimRequirement(ClaimTypesStore.EmployeeList,
-                            true.ToString())));
+                options.AddPolicy("ClaimRequirement", policy =>
+                    policy.Requirements.Add(new ClaimRequirement(ClaimTypesStore.EmployeeList,
+                        true.ToString())));
 
-                    options.AddPolicy("DynamicRole", policy =>
-                        policy.Requirements.Add(new DynamicRoleRequirement()));
-                });
+                options.AddPolicy("DynamicRole", policy =>
+                    policy.Requirements.Add(new DynamicRoleRequirement()));
+            });
+            #endregion
 
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
+
             //Transient
             services.AddTransient<IUtilities, Utilities>();
+            services.AddTransient<IPhoneTotpProviders, PhoneTotpProviders>();
+            services.Configure<PhoneTotpOptions>(options =>
+            {
+                options.StepInSeconds = 30;
+            });
             //Scoped
             services.AddScoped<IMessageSender, MessageSender>();
             services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
