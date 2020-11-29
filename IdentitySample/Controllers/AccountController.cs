@@ -1,9 +1,15 @@
 ﻿using IdentitySample.Repositories;
+using IdentitySample.Security.PhoneTotp;
+using IdentitySample.Security.PhoneTotp.Providers;
 using IdentitySample.ViewModel.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace IdentitySample.Controllers
@@ -13,12 +19,18 @@ namespace IdentitySample.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IMessageSender _messageSender;
+        private readonly IPhoneTotpProviders _phoneTotpProvider;
+        private readonly PhoneTotpOptions _phoneTotpOptions;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IMessageSender messageSender)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+            IMessageSender messageSender, IPhoneTotpProviders phoneTotpProvider,
+            IOptions<PhoneTotpOptions> phoneTotpOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _messageSender = messageSender;
+            _phoneTotpProvider = phoneTotpProvider;
+            _phoneTotpOptions = phoneTotpOptions?.Value ?? new PhoneTotpOptions();
         }
 
         [HttpGet]
@@ -370,6 +382,77 @@ namespace IdentitySample.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult SendTotpCode()
+        {
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("Index", "Home");
+
+            ViewData["SendTotpCodeErrorMessage"] = null;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendTotpCode(SendTotpCodeViewModel viewModel)
+        {
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                // Show expire time for user
+                if (TempData.ContainsKey("PTC"))
+                {
+                    var totpTempDataModel = JsonSerializer
+                        .Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+
+                    if (totpTempDataModel.ExpireTime >= DateTime.Now)
+                    {
+                        // returns a expire time as int for show in View
+                        var differenceInSeconds = (int)(totpTempDataModel.ExpireTime - DateTime.Now).TotalSeconds;
+                        ModelState.AddModelError("PhoneNumber", $"برای ارسال دوباره کد لطفا {differenceInSeconds} ثانیه صبرکنید.");
+                        // For keep temp data after calling
+                        TempData.Keep("PTC");
+                        return View(viewModel);
+                    }
+                }
+
+                var secretKey = Guid.NewGuid().ToString();
+                var totpCode = _phoneTotpProvider.GenerateTotp(secretKey);
+                var userExist = await _userManager.Users
+                    .AnyAsync(user => user.PhoneNumber == viewModel.PhoneNumber);
+
+                if (userExist)
+                {
+                    // TODO - Send Totp Code to user.
+                }
+
+                // Convert model to json as string
+                TempData["PTC"] = JsonSerializer.Serialize(new PhoneTotpTempDataModel()
+                {
+                    SecretKey = secretKey,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    ExpireTime = DateTime.Now.AddSeconds(_phoneTotpOptions.StepInSeconds)
+                });
+
+                // return RedirectToAction("VerifyTotpCode", "Account");
+                return Content(totpCode);
+            }
+
+            ViewData["SendTotpCodeErrorMessage"] = null;
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult VerifyTotpCode()
+        {
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("Index", "Home");
+
+            ViewData["SendTotpCodeErrorMessage"] = null;
+            return View();
         }
     }
 }
