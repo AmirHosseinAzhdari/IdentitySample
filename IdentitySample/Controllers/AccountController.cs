@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
@@ -186,7 +187,8 @@ namespace IdentitySample.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null,
+            string remoteError = null)
         {
             ViewData["returnUrl"] = returnUrl;
             returnUrl =
@@ -451,8 +453,86 @@ namespace IdentitySample.Controllers
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("Index", "Home");
 
+            if (TempData.ContainsKey("PTC")) return NotFound();
+
+            var totpTempDataModel = JsonSerializer
+                      .Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+            if (totpTempDataModel.ExpireTime >= DateTime.Now)
+            {
+                ViewData["SendTotpCodeErrorMessage"] = "کد ارسال شده منقضی شده لطفا کد جدیدی دریافت کنید.";
+                return RedirectToAction("SendTotpCode");
+            }
+
             ViewData["SendTotpCodeErrorMessage"] = null;
+            TempData.Keep("PTC");
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyTotpCode(VerifyTotpCodeViewModel viewModel)
+        {
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("Index", "Home");
+
+            if (TempData.ContainsKey("PTC")) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                var totpTempDataModel = JsonSerializer
+                      .Deserialize<PhoneTotpTempDataModel>(TempData["PTC"].ToString()!);
+                if (totpTempDataModel.ExpireTime >= DateTime.Now)
+                {
+                    ViewData["SendTotpCodeErrorMessage"] = "کد ارسال شده منقضی شده لطفا کد جدیدی دریافت کنید.";
+                    return RedirectToAction("SendTotpCode");
+                }
+
+                var user = await _userManager.Users
+                    .Where(u => u.PhoneNumber == totpTempDataModel.PhoneNumber)
+                    .FirstOrDefaultAsync();
+
+                var result = _phoneTotpProvider.VerifyTotp(totpTempDataModel.SecretKey, viewModel.TotpCode);
+                if (result.Succeeded)
+                {
+                    if (user == null)
+                    {
+                        ViewData["SendTotpCodeErrorMessage"] = "کاربری با شماره موبایل وارد شده یافت نشد.";
+                        return RedirectToAction("SendTotpCode");
+                    }
+
+                    if (!user.PhoneNumberConfirmed)
+                    {
+                        ViewData["SendTotpCodeErrorMessage"] = "شماره مویال شما تایید نشده است.";
+                        return RedirectToAction("SendTotpCode");
+                    }
+
+                    if (!await _userManager.IsLockedOutAsync(user))
+                    {
+                        await _userManager.ResetAccessFailedCountAsync(user);
+                        await _signInManager.SignInWithClaimsAsync(user, false, new List<Claim>()
+                        {
+                            new Claim("UserPhone", user.PhoneNumber ?? "")
+                        });
+
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    ViewData["SendTotpCodeErrorMessage"] = "اکانت شما به دلیل ورود ناموفق تا مدت 5 دقیقه قفل شده است";
+                    return RedirectToAction("SendTotpCode");
+                }
+
+                // lock account for 5 min
+                if (user != null && user.PhoneNumberConfirmed && !await _userManager.IsLockedOutAsync(user))
+                {
+                    await _userManager.AccessFailedAsync(user);
+                }
+
+                ViewData["SendTotpCodeErrorMessage"] = "کد ارسال شده منقضی شده لطفا کد جدیدی دریافت کنید.";
+                return RedirectToAction("SendTotpCode");
+            }
+
+            ViewData["SendTotpCodeErrorMessage"] = null;
+            return View(viewModel);
         }
     }
 }

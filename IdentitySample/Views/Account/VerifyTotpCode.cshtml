@@ -1,0 +1,32 @@
+﻿@model IdentitySample.ViewModel.Account.VerifyTotpCodeViewModel
+
+@{
+    ViewData["Title"] = "Verify TOTP code";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Vierify Code</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="SendTotpCode" asp-controller="Account" method="post">
+
+            <div class="text-danger">مدت زمان تایید کد <strong>30</strong> ثانیه میباشد.</div>
+
+            <div class="form-group">
+                <label asp-for="TotpCode" class="control-label"></label>
+                <input asp-for="TotpCode" class="form-control" />
+                <span asp-validation-for="TotpCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Send Code" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
